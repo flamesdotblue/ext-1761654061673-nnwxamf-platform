@@ -1,28 +1,46 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './components/HomePage';
+import MenuPage from './components/MenuPage';
+import PizzaBuilder from './components/PizzaBuilder';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
 }
 
-export default App
+import React from 'react';
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col bg-white text-neutral-900">
+        <Header />
+        <ScrollToTop />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/builder" element={<PizzaBuilder />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  );
+}
+
+function NotFound() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-24 text-center">
+      <h1 className="text-3xl md:text-4xl font-extrabold text-amber-700">Page not found</h1>
+      <p className="mt-4 text-neutral-600">The page you’re looking for doesn’t exist.</p>
+      <Link to="/" className="inline-block mt-8 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500 to-red-500 text-white font-semibold shadow hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">Go Home</Link>
+    </div>
+  );
+}
